@@ -1,0 +1,84 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
+
+public class NumberGuessingGame {
+    private int targetNumber;
+    private int attempts;
+    private JFrame frame;
+    private JTextField guessField;
+    private JLabel messageLabel;
+    private JLabel scoreLabel;
+    
+    public NumberGuessingGame() {
+        targetNumber = new Random().nextInt(100) + 1;
+        attempts = 0;
+        
+        frame = new JFrame("Number Guessing Game");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new GridLayout(5, 1));
+        
+        messageLabel = new JLabel("Guess a number between 1 and 100", SwingConstants.CENTER);
+        frame.add(messageLabel);
+        
+        guessField = new JTextField();
+        frame.add(guessField);
+        
+        JButton guessButton = new JButton("Guess");
+        JButton restartButton = new JButton("Restart");
+        
+        scoreLabel = new JLabel("Attempts: 0", SwingConstants.CENTER);
+        frame.add(scoreLabel);
+        
+        guessButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                checkGuess();
+            }
+        });
+        
+        restartButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                resetGame();
+            }
+        });
+        
+        frame.add(guessButton);
+        frame.add(restartButton);
+        
+        frame.setVisible(true);
+    }
+    
+    private void checkGuess() {
+        try {
+            int guess = Integer.parseInt(guessField.getText());
+            attempts++;
+            
+            if (guess < targetNumber) {
+                messageLabel.setText("Too low! Try again.");
+            } else if (guess > targetNumber) {
+                messageLabel.setText("Too high! Try again.");
+            } else {
+                messageLabel.setText("Correct! You guessed it in " + attempts + " attempts.");
+            }
+            
+            scoreLabel.setText("Attempts: " + attempts);
+        } catch (NumberFormatException ex) {
+            messageLabel.setText("Invalid input. Enter a number.");
+        }
+    }
+    
+    private void resetGame() {
+        targetNumber = new Random().nextInt(100) + 1;
+        attempts = 0;
+        messageLabel.setText("Guess a number between 1 and 100");
+        scoreLabel.setText("Attempts: 0");
+        guessField.setText("");
+    }
+    
+    public static void main(String[] args) {
+        new NumberGuessingGame();
+    }
+}
